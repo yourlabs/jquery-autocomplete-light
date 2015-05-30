@@ -65,6 +65,10 @@ module.exports = function(grunt) {
         watch: {
             files: ['src/*'],
             tasks: ['default']
+        },
+
+        qunit: {
+            all: ['test/**/*.html']
         }
 
     });
@@ -74,9 +78,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-coffee");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-qunit");
 
     grunt.registerTask("build", ["concat", "uglify"]);
-    grunt.registerTask("default", ["jshint", "build"]);
+    grunt.registerTask("default", ["jshint", "qunit", "build"]);
     grunt.registerTask("travis", ["default"]);
 
 };

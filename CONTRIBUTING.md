@@ -3,14 +3,16 @@
 You need npm, grunt and all the JS toolkit. Then, install grunt with modules in
 the local directory:
 
-    npm install grunt --save-dev
-    npm install grunt-contrib-{concat,jshint,uglify,coffee,watch} --save-dev
+    npm install grunt
+    npm install grunt-contrib-{concat,jshint,uglify,coffee,watch,qunit}
 
 # Building jquery.autocomplete-light.js
 
-Run:
-
     grunt build
+
+# Testing
+
+    grunt qunit
 
 # Contributing
 
