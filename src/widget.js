@@ -60,7 +60,7 @@ yourlabs.Widget = function(widget) {
     this.maximumValues = 0;
     
     // Clear input when choice made? 1 for yes, 0 for no
-    this.clearInputOnSelectChoice = "1";
+    this.clearInputOnSelectChoice = '1';
 }
 
 // When a choice is selected from the autocomplete of this widget,
@@ -118,7 +118,7 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    if (this.clearInputOnSelectChoice === "1")
+    if (this.clearInputOnSelectChoice === '1')
         this.input.val('');
 }
 

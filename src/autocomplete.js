@@ -56,11 +56,11 @@ Also, note that this script is composed of two main parts:
 */
 
 if (window.isOpera === undefined) {
-    var isOpera = (navigator.userAgent.indexOf("Opera")>=0) && parseFloat(navigator.appVersion);
+    var isOpera = (navigator.userAgent.indexOf('Opera')>=0) && parseFloat(navigator.appVersion);
 }
 
 if (window.isIE === undefined) {
-    var isIE = ((document.all) && (!isOpera)) && parseFloat(navigator.appVersion.split("MSIE ")[1].split(";")[0]);
+    var isIE = ((document.all) && (!isOpera)) && parseFloat(navigator.appVersion.split('MSIE ')[1].split(';')[0]);
 }
 
 if (window.findPosX === undefined) {
@@ -116,7 +116,7 @@ yourlabs.getInternetExplorerVersion = function()
   if (navigator.appName == 'Microsoft Internet Explorer')
   {
     var ua = navigator.userAgent;
-    var re  = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
+    var re  = new RegExp('MSIE ([0-9]{1,}[.0-9]{0,})');
     if (re.exec(ua) !== null)
       rv = parseFloat( RegExp.$1 );
   }
@@ -641,7 +641,7 @@ yourlabs.Autocomplete.prototype.makeXhr = function() {
     this.input.addClass('xhr-pending');
 
     this.xhr = $.ajax(this.url, {
-        type: "GET",
+        type: 'GET',
         data: this.data,
         complete: $.proxy(this.fetchComplete, this)
     });
