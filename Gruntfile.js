@@ -23,14 +23,26 @@ module.exports = function(grunt) {
 				banner: "<%= meta.banner %>"
 			},
 			dist: {
-				src: ["src/jquery.boilerplate.js"],
-				dest: "dist/jquery.boilerplate.js"
+				src: [
+                    "src/autocomplete.js",
+                    "src/addanother.js",
+                    "src/remote.js",
+                    "src/text_widget.js",
+                    "src/widget.js"
+                ],
+				dest: "dist/jquery.autocomplete-light.js"
 			}
 		},
 
 		// Lint definitions
 		jshint: {
-			files: ["src/jquery.boilerplate.js"],
+            files: [
+                "src/autocomplete.js",
+                "src/addanother.js",
+                "src/remote.js",
+                "src/text_widget.js",
+                "src/widget.js"
+            ],
 			options: {
 				jshintrc: ".jshintrc"
 			}
@@ -39,20 +51,11 @@ module.exports = function(grunt) {
 		// Minify definitions
 		uglify: {
 			my_target: {
-				src: ["dist/jquery.boilerplate.js"],
-				dest: "dist/jquery.boilerplate.min.js"
+				src: ["dist/jquery.autocomplete-light.js"],
+				dest: "dist/jquery.autocomplete-light.min.js"
 			},
 			options: {
 				banner: "<%= meta.banner %>"
-			}
-		},
-
-		// CoffeeScript compilation
-		coffee: {
-			compile: {
-				files: {
-					"dist/jquery.boilerplate.js": "src/jquery.boilerplate.coffee"
-				}
 			}
 		},
 

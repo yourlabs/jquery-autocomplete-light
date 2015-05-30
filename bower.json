@@ -1,0 +1,17 @@
+{
+	"name": "jquery-autocomplete-light",
+	"version": "0.0.0",
+	"homepage": "http://yourlabs.org",
+	"authors": [
+		"James Pic <jpic@yourlabs.org>"
+	],
+	"description": "Dead simple autocomplete for jQuery",
+	"main": "src/jquery.autocomplete-light.js",
+	"keywords": [
+		"jquery",
+		"plugin",
+		"jquery-plugin",
+		"autocomplete"
+	],
+	"license": "MIT"
+}
