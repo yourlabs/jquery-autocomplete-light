@@ -240,7 +240,7 @@ yourlabs.Widget.prototype.updateAutocompleteExclude = function() {
     var widget = this;
     var choices = this.deck.find(this.autocomplete.choiceSelector);
 
-    this.autocomplete.data['exclude'] = $.map(choices, function(choice) { 
+    this.autocomplete.data.exclude = $.map(choices, function(choice) { 
         return widget.getValue($(choice)); 
     });
 }

@@ -199,7 +199,7 @@ $.fn.yourlabsTextWidget = function(overrides) {
 
                 var newKey = key.replace('autocomplete', '');
                 newKey = newKey.replace(newKey[0], newKey[0].toLowerCase())
-                dataOverrides['autocompleteOptions'][newKey] = data[key];
+                dataOverrides.autocompleteOptions[newKey] = data[key];
             } else {
                 dataOverrides[key] = data[key];
             }
