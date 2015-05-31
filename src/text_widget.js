@@ -21,7 +21,7 @@ For now, the script is composed of these parts:
 jQuery.fn.getSelectionStart = function(){
     // Written by jQuery4U
     // http://www.jquery4u.com/snippets/6-jquery-cursor-functions/#.UDPQ9xXtFw8
-    if(this.lengh == 0) return -1;
+    if(this.lengh === 0) return -1;
     input = this[0];
 
     var pos = input.value.length;
@@ -33,10 +33,10 @@ jQuery.fn.getSelectionStart = function(){
             var r = document.selection.createRange().duplicate();
             r.moveEnd('character', input.value.length);
         }
-        if (r.text == '')
+        if (r.text === '')
             pos = input.value.length;
         pos = input.value.lastIndexOf(r.text);
-    } else if(typeof(input.selectionStart)!='undefined')
+    } else if (typeof(input.selectionStart) !== undefined)
     pos = input.selectionStart;
 
     return pos;
@@ -44,7 +44,7 @@ jQuery.fn.getSelectionStart = function(){
 
 jQuery.fn.getCursorPosition = function(){
     // Written by jQuery4U
-    if(this.lengh == 0) return -1;
+    if (this.lengh === 0) return -1;
     return $(this).getSelectionStart();
 }
 
@@ -77,7 +77,7 @@ jQuery.fn.getCursorWordPositions = function() {
 
     // find start of word
     for(var start=position - 1; start >= 0; start--) {
-        if (value[start] == ',') {
+        if (value[start] === ',') {
             break;
         }
     }
@@ -85,13 +85,13 @@ jQuery.fn.getCursorWordPositions = function() {
 
     // find end of word
     for(var end=position; end <= value.length - 1; end++) {
-        if (value[end] == ',') {
+        if (value[end] === ',') {
             break;
         }
     }
 
-    while(value[start] == ',' || value[start] == ' ') start++;
-    while(value[end] == ',' || value[end] == ' ') end--;
+    while(value[start] === ',' || value[start] === ' ') start++;
+    while(value[end] === ',' || value[end] === ' ') end--;
 
     return [start, end + 1];
 }
@@ -163,7 +163,7 @@ yourlabs.TextWidget.prototype.destroy = function(input) {
 $.fn.yourlabsTextWidget = function(overrides) {
     var overrides = overrides ? overrides : {};
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         var widget = this.data('widget');
         if (widget) {
             widget.destroy(this);
@@ -172,7 +172,7 @@ $.fn.yourlabsTextWidget = function(overrides) {
         return
     }
 
-    if (this.data('widget') == undefined) {
+    if (this.data('widget') === undefined) {
         // Instanciate the widget
         var widget = new yourlabs.TextWidget(this);
 
@@ -193,8 +193,8 @@ $.fn.yourlabsTextWidget = function(overrides) {
         for (var key in data) {
             if (!key) continue;
 
-            if (key.substr(0, 12) == 'autocomplete') {
-                if (key == 'autocomplete') continue;
+            if (key.substr(0, 12) === 'autocomplete') {
+                if (key === 'autocomplete') continue;
 
                 var newKey = key.replace('autocomplete', '');
                 newKey = newKey.replace(newKey[0], newKey[0].toLowerCase())

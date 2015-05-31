@@ -121,7 +121,7 @@ yourlabs.getInternetExplorerVersion = function()
 // (indicating the use of another browser).
 {
   var rv = -1; // Return value assumes failure.
-  if (navigator.appName == 'Microsoft Internet Explorer')
+  if (navigator.appName === 'Microsoft Internet Explorer')
   {
     var ua = navigator.userAgent;
     var re  = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
@@ -134,7 +134,7 @@ yourlabs.getInternetExplorerVersion = function()
 $.fn.yourlabsRegistry = function(key, value) {
     var ie = yourlabs.getInternetExplorerVersion();
 
-    if (ie == -1 || ie > 8) {
+    if (ie === -1 || ie > 8) {
         // If not on IE8 and friends, that's all we need to do.
         return value === undefined ? this.data(key) : this.data(key, value);
     }
@@ -148,7 +148,7 @@ $.fn.yourlabsRegistry = function(key, value) {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
                 /[xy]/g,
                 function(c) {
-                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
                     return v.toString(16);
                 }
             );
@@ -328,7 +328,7 @@ yourlabs.Autocomplete.prototype.initialize = function() {
         if (this.box.is(':visible')) this.fixPosition();
     }, this));
 
-    if (ie == -1 || ie > 9) {
+    if (ie === -1 || ie > 9) {
         this.input.on('input.autocomplete', $.proxy(this.refresh, this));
     }
     else
@@ -525,8 +525,8 @@ yourlabs.Autocomplete.prototype.move = function(e) {
     //       charCode is 0 for arrow keys.
     //       Ref: http://stackoverflow.com/a/12046935/15690
     var way;
-    if (e.keyCode == 38 && !e.charCode) way = 'up';
-    else if (e.keyCode == 40 && !e.charCode) way = 'down';
+    if (e.keyCode === 38 && !e.charCode) way = 'up';
+    else if (e.keyCode === 40 && !e.charCode) way = 'down';
     else return;
 
     // The first and last choices. If the user presses down on the last
@@ -543,7 +543,7 @@ yourlabs.Autocomplete.prototype.move = function(e) {
 
     // If a choice is currently hilighted:
     if (current.length) {
-        if (way == 'up') {
+        if (way === 'up') {
             // The target choice becomes the first previous choice.
             target = current.prevAll(this.choiceSelector + ':first');
 
@@ -561,7 +561,7 @@ yourlabs.Autocomplete.prototype.move = function(e) {
         this.input.trigger('dehilightChoice',
             [current, this]);
     } else {
-        target = way == 'up' ? last : first;
+        target = way === 'up' ? last : first;
     }
 
     // Avoid moving the cursor in the input.
@@ -583,7 +583,7 @@ yourlabs.Autocomplete.prototype.fixPosition = function() {
     var el = this.input.get(0)
 
     var zIndex = this.input.parents().filter(function() {
-        return $(this).css('z-index') != 'auto' && $(this).css('z-index') != 0;
+        return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== 0;
     }).first().css('z-index');
 
     this.box.appendTo(this.container).css({
@@ -610,7 +610,7 @@ yourlabs.Autocomplete.prototype.refresh = function() {
 // Return true if the data for this query has changed from last query.
 yourlabs.Autocomplete.prototype.hasChanged = function() {
     for(var key in this.data) {
-        if (!(key in this.lastData) || this.data[key] != this.lastData[key]) {
+        if (!(key in this.lastData) || this.data[key] !== this.lastData[key]) {
             return true;
         }
     }
@@ -659,8 +659,8 @@ yourlabs.Autocomplete.prototype.makeXhr = function() {
 yourlabs.Autocomplete.prototype.fetchComplete = function(jqXHR, textStatus) {
     this.input.removeClass('xhr-pending');
 
-    if (this.xhr == jqXHR) this.xhr = false;
-    if (textStatus == 'abort') return;
+    if (this.xhr === jqXHR) this.xhr = false;
+    if (textStatus === 'abort') return;
     this.show(jqXHR.responseText);
 };
 
@@ -703,7 +703,7 @@ $.fn.yourlabsAutocomplete = function(overrides) {
     overrides = overrides ? overrides : {};
     var autocomplete = this.yourlabsRegistry('autocomplete');
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         if (autocomplete) {
             autocomplete.destroy(this);
             this.removeData('autocomplete');
@@ -722,7 +722,7 @@ $.fn.yourlabsAutocomplete = function(overrides) {
         // Extend the instance with data-autocomplete-* overrides
         for (var key in this.data()) {
             if (!key) continue;
-            if (key.substr(0, 12) != 'autocomplete' || key == 'autocomplete')
+            if (key.substr(0, 12) !== 'autocomplete' || key === 'autocomplete')
                 continue;
             var newKey = key.replace('autocomplete', '');
             newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
@@ -770,7 +770,7 @@ $(document).ready(function() {
         name = id_to_windowname(name);
         href = triggeringLink.attr( 'href' );
 
-        if (href.indexOf('?') == -1) {
+        if (href.indexOf('?') === -1) {
             href += '?';
         }
 
@@ -860,7 +860,7 @@ $(document).ready(function() {
     });
 });
 
-if (window.yourlabs == undefined) window.yourlabs = {};
+if (window.yourlabs === undefined) window.yourlabs = {};
 
 yourlabs.RemoteAutocompleteWidget = {
     /*
@@ -875,7 +875,7 @@ yourlabs.RemoteAutocompleteWidget = {
     getValue: function(choice) {
         var value = choice.data('value');
 
-        if (typeof(value)=='string' && isNaN(value) && value.match(/^https?:/)) {
+        if (typeof(value) === 'string' && isNaN(value) && value.match(/^https?:/)) {
             $.ajax(this.autocompleteOptions.url, {
                 async: false,
                 type: 'post',
@@ -925,7 +925,7 @@ For now, the script is composed of these parts:
 jQuery.fn.getSelectionStart = function(){
     // Written by jQuery4U
     // http://www.jquery4u.com/snippets/6-jquery-cursor-functions/#.UDPQ9xXtFw8
-    if(this.lengh == 0) return -1;
+    if(this.lengh === 0) return -1;
     input = this[0];
 
     var pos = input.value.length;
@@ -937,10 +937,10 @@ jQuery.fn.getSelectionStart = function(){
             var r = document.selection.createRange().duplicate();
             r.moveEnd('character', input.value.length);
         }
-        if (r.text == '')
+        if (r.text === '')
             pos = input.value.length;
         pos = input.value.lastIndexOf(r.text);
-    } else if(typeof(input.selectionStart)!="undefined")
+    } else if (typeof(input.selectionStart) !== undefined)
     pos = input.selectionStart;
 
     return pos;
@@ -948,7 +948,7 @@ jQuery.fn.getSelectionStart = function(){
 
 jQuery.fn.getCursorPosition = function(){
     // Written by jQuery4U
-    if(this.lengh == 0) return -1;
+    if (this.lengh === 0) return -1;
     return $(this).getSelectionStart();
 }
 
@@ -977,11 +977,10 @@ jQuery.fn.getCursorWord = function() {
 jQuery.fn.getCursorWordPositions = function() {
     var position = $(this).getCursorPosition();
     var value = $(this).val();
-    var word = '';
 
     // find start of word
     for(var start=position - 1; start >= 0; start--) {
-        if (value[start] == ',') {
+        if (value[start] === ',') {
             break;
         }
     }
@@ -989,13 +988,13 @@ jQuery.fn.getCursorWordPositions = function() {
 
     // find end of word
     for(var end=position; end <= value.length - 1; end++) {
-        if (value[end] == ',') {
+        if (value[end] === ',') {
             break;
         }
     }
 
-    while(value[start] == ',' || value[start] == ' ') start++;
-    while(value[end] == ',' || value[end] == ' ') end--;
+    while(value[start] === ',' || value[start] === ' ') start++;
+    while(value[end] === ',' || value[end] === ' ') end--;
 
     return [start, end + 1];
 }
@@ -1067,7 +1066,7 @@ yourlabs.TextWidget.prototype.destroy = function(input) {
 $.fn.yourlabsTextWidget = function(overrides) {
     var overrides = overrides ? overrides : {};
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         var widget = this.data('widget');
         if (widget) {
             widget.destroy(this);
@@ -1076,7 +1075,7 @@ $.fn.yourlabsTextWidget = function(overrides) {
         return
     }
 
-    if (this.data('widget') == undefined) {
+    if (this.data('widget') === undefined) {
         // Instanciate the widget
         var widget = new yourlabs.TextWidget(this);
 
@@ -1097,8 +1096,8 @@ $.fn.yourlabsTextWidget = function(overrides) {
         for (var key in data) {
             if (!key) continue;
 
-            if (key.substr(0, 12) == 'autocomplete') {
-                if (key == 'autocomplete') continue;
+            if (key.substr(0, 12) === 'autocomplete') {
+                if (key === 'autocomplete') continue;
 
                 var newKey = key.replace('autocomplete', '');
                 newKey = newKey.replace(newKey[0], newKey[0].toLowerCase())
@@ -1219,7 +1218,7 @@ override Widget.getValue() to implement your own logic.
 */
 
 // Our class will live in the yourlabs global namespace.
-if (window.yourlabs == undefined) window.yourlabs = {};
+if (window.yourlabs === undefined) window.yourlabs = {};
 
 $.ajaxSettings.traditional = true
 
@@ -1318,7 +1317,7 @@ yourlabs.Widget.prototype.freeDeck = function() {
 yourlabs.Widget.prototype.resetDisplay = function() {
     var selected = this.select.find('option:selected').length;
 
-    if (this.maximumValues && selected == this.maximumValues) {
+    if (this.maximumValues && selected === this.maximumValues) {
         this.input.hide();
     } else {
         this.input.show();
@@ -1407,7 +1406,7 @@ yourlabs.Widget.prototype.deselectChoice = function(choice) {
 
     choice.remove();
 
-    if (this.deck.children().length == 0) {
+    if (this.deck.children().length === 0) {
         this.deck.hide();
     }
 
@@ -1476,7 +1475,7 @@ $.fn.yourlabsWidget = function(overrides) {
 
     var widget = this.yourlabsRegistry('widget');
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         if (widget) {
             widget.destroy(this);
             this.removeData('widget');
@@ -1484,14 +1483,14 @@ $.fn.yourlabsWidget = function(overrides) {
         return
     }
 
-    if (widget == undefined) {
+    if (widget === undefined) {
         // Instanciate the widget
         var widget = new yourlabs.Widget(this);
 
         // Extend the instance with data-widget-* overrides
         for (var key in this.data()) {
             if (!key) continue;
-            if (key.substr(0, 6) != 'widget' || key == 'widget') continue;
+            if (key.substr(0, 6) !== 'widget' || key === 'widget') continue;
             var newKey = key.replace('widget', '');
             var newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
             widget[newKey] = this.data(key);
@@ -1634,7 +1633,7 @@ $(document).ready(function() {
     });
     
     var ie = yourlabs.getInternetExplorerVersion();
-    if (ie != -1 && ie < 9) {
+    if (ie !== -1 && ie < 9) {
         observe = [
             '.autocomplete-light-widget:not([data-yourlabs-skip])',
             '.autocomplete-light-widget option:not([data-yourlabs-skip])'

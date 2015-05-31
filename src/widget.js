@@ -40,7 +40,7 @@ override Widget.getValue() to implement your own logic.
 */
 
 // Our class will live in the yourlabs global namespace.
-if (window.yourlabs == undefined) window.yourlabs = {};
+if (window.yourlabs === undefined) window.yourlabs = {};
 
 $.ajaxSettings.traditional = true
 
@@ -139,7 +139,7 @@ yourlabs.Widget.prototype.freeDeck = function() {
 yourlabs.Widget.prototype.resetDisplay = function() {
     var selected = this.select.find('option:selected').length;
 
-    if (this.maximumValues && selected == this.maximumValues) {
+    if (this.maximumValues && selected === this.maximumValues) {
         this.input.hide();
     } else {
         this.input.show();
@@ -228,7 +228,7 @@ yourlabs.Widget.prototype.deselectChoice = function(choice) {
 
     choice.remove();
 
-    if (this.deck.children().length == 0) {
+    if (this.deck.children().length === 0) {
         this.deck.hide();
     }
 
@@ -297,7 +297,7 @@ $.fn.yourlabsWidget = function(overrides) {
 
     var widget = this.yourlabsRegistry('widget');
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         if (widget) {
             widget.destroy(this);
             this.removeData('widget');
@@ -305,14 +305,14 @@ $.fn.yourlabsWidget = function(overrides) {
         return
     }
 
-    if (widget == undefined) {
+    if (widget === undefined) {
         // Instanciate the widget
         var widget = new yourlabs.Widget(this);
 
         // Extend the instance with data-widget-* overrides
         for (var key in this.data()) {
             if (!key) continue;
-            if (key.substr(0, 6) != 'widget' || key == 'widget') continue;
+            if (key.substr(0, 6) !== 'widget' || key === 'widget') continue;
             var newKey = key.replace('widget', '');
             var newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
             widget[newKey] = this.data(key);
@@ -455,7 +455,7 @@ $(document).ready(function() {
     });
     
     var ie = yourlabs.getInternetExplorerVersion();
-    if (ie != -1 && ie < 9) {
+    if (ie !== -1 && ie < 9) {
         observe = [
             '.autocomplete-light-widget:not([data-yourlabs-skip])',
             '.autocomplete-light-widget option:not([data-yourlabs-skip])'

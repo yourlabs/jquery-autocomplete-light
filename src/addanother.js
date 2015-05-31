@@ -6,7 +6,7 @@ $(document).ready(function() {
         name = id_to_windowname(name);
         href = triggeringLink.attr( 'href' );
 
-        if (href.indexOf('?') == -1) {
+        if (href.indexOf('?') === -1) {
             href += '?';
         }
 
