@@ -64,11 +64,11 @@ Also, note that this script is composed of two main parts:
 */
 
 if (window.isOpera === undefined) {
-    var isOpera = (navigator.userAgent.indexOf("Opera")>=0) && parseFloat(navigator.appVersion);
+    var isOpera = (navigator.userAgent.indexOf('Opera')>=0) && parseFloat(navigator.appVersion);
 }
 
 if (window.isIE === undefined) {
-    var isIE = ((document.all) && (!isOpera)) && parseFloat(navigator.appVersion.split("MSIE ")[1].split(";")[0]);
+    var isIE = ((document.all) && (!isOpera)) && parseFloat(navigator.appVersion.split('MSIE ')[1].split(';')[0]);
 }
 
 if (window.findPosX === undefined) {
@@ -124,7 +124,7 @@ yourlabs.getInternetExplorerVersion = function()
   if (navigator.appName === 'Microsoft Internet Explorer')
   {
     var ua = navigator.userAgent;
-    var re  = new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");
+    var re  = new RegExp('MSIE ([0-9]{1,}[.0-9]{0,})');
     if (re.exec(ua) !== null)
       rv = parseFloat( RegExp.$1 );
   }
@@ -649,7 +649,7 @@ yourlabs.Autocomplete.prototype.makeXhr = function() {
     this.input.addClass('xhr-pending');
 
     this.xhr = $.ajax(this.url, {
-        type: "GET",
+        type: 'GET',
         data: this.data,
         complete: $.proxy(this.fetchComplete, this)
     });
@@ -817,7 +817,7 @@ $(document).ready(function() {
                 o.selected = true;
             }
         } else {
-            alert("Could not get input id for win " + name);
+            alert('Could not get input id for win ' + name);
         }
 
         win.close();
@@ -829,7 +829,7 @@ $(document).ready(function() {
     // Unescape a string that was escaped using django.utils.html.escape.
         text = text.replace(/</g, '');
         text = text.replace(/"/g, '"');
-        text = text.replace(/'/g, "'");
+        text = text.replace(/'/g, '\'');
         text = text.replace(/&/g, '&');
         return text;
     }
@@ -1238,7 +1238,7 @@ yourlabs.Widget = function(widget) {
     this.maximumValues = 0;
     
     // Clear input when choice made? 1 for yes, 0 for no
-    this.clearInputOnSelectChoice = "1";
+    this.clearInputOnSelectChoice = '1';
 }
 
 // When a choice is selected from the autocomplete of this widget,
@@ -1296,7 +1296,7 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    if (this.clearInputOnSelectChoice === "1")
+    if (this.clearInputOnSelectChoice === '1')
         this.input.val('');
 }
 
@@ -1420,7 +1420,7 @@ yourlabs.Widget.prototype.updateAutocompleteExclude = function() {
     var widget = this;
     var choices = this.deck.find(this.autocomplete.choiceSelector);
 
-    this.autocomplete.data['exclude'] = $.map(choices, function(choice) { 
+    this.autocomplete.data.exclude = $.map(choices, function(choice) { 
         return widget.getValue($(choice)); 
     });
 }
