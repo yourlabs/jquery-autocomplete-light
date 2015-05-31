@@ -1,4 +1,4 @@
-if (window.yourlabs == undefined) window.yourlabs = {};
+if (window.yourlabs === undefined) window.yourlabs = {};
 
 yourlabs.RemoteAutocompleteWidget = {
     /*
@@ -13,7 +13,7 @@ yourlabs.RemoteAutocompleteWidget = {
     getValue: function(choice) {
         var value = choice.data('value');
 
-        if (typeof(value)=='string' && isNaN(value) && value.match(/^https?:/)) {
+        if (typeof(value) === 'string' && isNaN(value) && value.match(/^https?:/)) {
             $.ajax(this.autocompleteOptions.url, {
                 async: false,
                 type: 'post',

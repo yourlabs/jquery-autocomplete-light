@@ -6,7 +6,7 @@ $(document).ready(function() {
         name = id_to_windowname(name);
         href = triggeringLink.attr( 'href' );
 
-        if (href.indexOf('?') == -1) {
+        if (href.indexOf('?') === -1) {
             href += '?';
         }
 
@@ -53,7 +53,7 @@ $(document).ready(function() {
                 o.selected = true;
             }
         } else {
-            alert("Could not get input id for win " + name);
+            alert('Could not get input id for win ' + name);
         }
 
         win.close();
@@ -65,7 +65,7 @@ $(document).ready(function() {
     // Unescape a string that was escaped using django.utils.html.escape.
         text = text.replace(/</g, '');
         text = text.replace(/"/g, '"');
-        text = text.replace(/'/g, "'");
+        text = text.replace(/'/g, '\'');
         text = text.replace(/&/g, '&');
         return text;
     }

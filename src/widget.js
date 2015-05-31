@@ -40,7 +40,7 @@ override Widget.getValue() to implement your own logic.
 */
 
 // Our class will live in the yourlabs global namespace.
-if (window.yourlabs == undefined) window.yourlabs = {};
+if (window.yourlabs === undefined) window.yourlabs = {};
 
 $.ajaxSettings.traditional = true
 
@@ -60,7 +60,7 @@ yourlabs.Widget = function(widget) {
     this.maximumValues = 0;
     
     // Clear input when choice made? 1 for yes, 0 for no
-    this.clearInputOnSelectChoice = "1";
+    this.clearInputOnSelectChoice = '1';
 }
 
 // When a choice is selected from the autocomplete of this widget,
@@ -79,8 +79,6 @@ yourlabs.Widget.prototype.initializeAutocomplete = function() {
 
 // Bind Autocomplete.selectChoice signal to Widget.selectChoice()
 yourlabs.Widget.prototype.bindSelectChoice = function() {
-    var widget = this;
-
     this.input.bind('selectChoice', function(e, choice) {
         if (!choice.length)
             return // placeholder: create choice here
@@ -118,7 +116,7 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    if (this.clearInputOnSelectChoice === "1")
+    if (this.clearInputOnSelectChoice === '1')
         this.input.val('');
 }
 
@@ -139,7 +137,7 @@ yourlabs.Widget.prototype.freeDeck = function() {
 yourlabs.Widget.prototype.resetDisplay = function() {
     var selected = this.select.find('option:selected').length;
 
-    if (this.maximumValues && selected == this.maximumValues) {
+    if (this.maximumValues && selected === this.maximumValues) {
         this.input.hide();
     } else {
         this.input.show();
@@ -228,7 +226,7 @@ yourlabs.Widget.prototype.deselectChoice = function(choice) {
 
     choice.remove();
 
-    if (this.deck.children().length == 0) {
+    if (this.deck.children().length === 0) {
         this.deck.hide();
     }
 
@@ -242,7 +240,7 @@ yourlabs.Widget.prototype.updateAutocompleteExclude = function() {
     var widget = this;
     var choices = this.deck.find(this.autocomplete.choiceSelector);
 
-    this.autocomplete.data['exclude'] = $.map(choices, function(choice) { 
+    this.autocomplete.data.exclude = $.map(choices, function(choice) { 
         return widget.getValue($(choice)); 
     });
 }
@@ -293,11 +291,11 @@ yourlabs.Widget.prototype.destroy = function(widget) {
 // Calling yourlabsWidget('destroy') will destroy the widget. Useful if the
 // element was blindly cloned with .clone(true) for example.
 $.fn.yourlabsWidget = function(overrides) {
-    var overrides = overrides ? overrides : {};
+    overrides = overrides ? overrides : {};
 
     var widget = this.yourlabsRegistry('widget');
 
-    if (overrides == 'destroy') {
+    if (overrides === 'destroy') {
         if (widget) {
             widget.destroy(this);
             this.removeData('widget');
@@ -305,16 +303,16 @@ $.fn.yourlabsWidget = function(overrides) {
         return
     }
 
-    if (widget == undefined) {
+    if (widget === undefined) {
         // Instanciate the widget
-        var widget = new yourlabs.Widget(this);
+        widget = new yourlabs.Widget(this);
 
         // Extend the instance with data-widget-* overrides
         for (var key in this.data()) {
             if (!key) continue;
-            if (key.substr(0, 6) != 'widget' || key == 'widget') continue;
+            if (key.substr(0, 6) !== 'widget' || key === 'widget') continue;
             var newKey = key.replace('widget', '');
-            var newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+            newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
             widget[newKey] = this.data(key);
         }
 
@@ -433,8 +431,10 @@ $(document).ready(function() {
             $('select#id-dependencies').append(
                 '<option value="9999" selected="selected">blabla</option>')
         */
+        var widget;
+
         if ($(e.target).is('option')) { // added an option ?
-            var widget = $(e.target).parents('.autocomplete-light-widget');
+            widget = $(e.target).parents('.autocomplete-light-widget');
 
             if (!widget.length) {
                 return;
@@ -454,7 +454,7 @@ $(document).ready(function() {
             }
         } else { // added a widget ?
             var notReady = '.autocomplete-light-widget:not([data-widget-ready])'
-            var widget = $(e.target).find(notReady);
+            widget = $(e.target).find(notReady);
 
             if (!widget.length) {
                 return;
@@ -476,14 +476,14 @@ $(document).ready(function() {
     });
     
     var ie = yourlabs.getInternetExplorerVersion();
-    if (ie != -1 && ie < 9) {
+    if (ie !== -1 && ie < 9) {
         observe = [
             '.autocomplete-light-widget:not([data-yourlabs-skip])',
             '.autocomplete-light-widget option:not([data-yourlabs-skip])'
         ].join();
         $(observe).attr('data-yourlabs-skip', 1);
 
-        function ieDOMNodeInserted() {
+        var ieDOMNodeInserted = function() {
             // http://msdn.microsoft.com/en-us/library/ms536957
             $(observe).each(function() {
                 $(document).trigger(jQuery.Event('DOMNodeInserted', {target: $(this)}));

@@ -1,3 +1,9 @@
 language: node_js
 node_js:
   - 0.10
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#yourlabs"
+    template:
+      - "%{repository} (%{commit} %{author}) : %{message} %{build_url} %{compare_url}"
