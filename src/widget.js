@@ -462,7 +462,7 @@ $(document).ready(function() {
         ].join();
         $(observe).attr('data-yourlabs-skip', 1);
 
-        function ieDOMNodeInserted() {
+        var ieDOMNodeInserted = function() {
             // http://msdn.microsoft.com/en-us/library/ms536957
             $(observe).each(function() {
                 $(document).trigger(jQuery.Event('DOMNodeInserted', {target: $(this)}));

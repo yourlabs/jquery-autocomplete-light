@@ -923,6 +923,7 @@ For now, the script is composed of these parts:
 */
 
 jQuery.fn.getSelectionStart = function(){
+    var r;
     // Written by jQuery4U
     // http://www.jquery4u.com/snippets/6-jquery-cursor-functions/#.UDPQ9xXtFw8
     if(this.lengh === 0) return -1;
@@ -932,9 +933,9 @@ jQuery.fn.getSelectionStart = function(){
 
     if (input.createTextRange) {
         if (window.getSelection) {
-            var r = window.getSelection(); //IE11
+            r = window.getSelection(); //IE11
         } else {
-            var r = document.selection.createRange().duplicate();
+            r = document.selection.createRange().duplicate();
             r.moveEnd('character', input.value.length);
         }
         if (r.text === '')
@@ -1064,10 +1065,11 @@ yourlabs.TextWidget.prototype.destroy = function(input) {
 
 // TextWidget factory, registry and destroyer, as jQuery extension.
 $.fn.yourlabsTextWidget = function(overrides) {
-    var overrides = overrides ? overrides : {};
+    var widget;
+    overrides = overrides ? overrides : {};
 
     if (overrides === 'destroy') {
-        var widget = this.data('widget');
+        widget = this.data('widget');
         if (widget) {
             widget.destroy(this);
             this.removeData('widget');
@@ -1077,7 +1079,7 @@ $.fn.yourlabsTextWidget = function(overrides) {
 
     if (this.data('widget') === undefined) {
         // Instanciate the widget
-        var widget = new yourlabs.TextWidget(this);
+        widget = new yourlabs.TextWidget(this);
 
         // Pares data-*
         var data = this.data();
@@ -1257,8 +1259,6 @@ yourlabs.Widget.prototype.initializeAutocomplete = function() {
 
 // Bind Autocomplete.selectChoice signal to Widget.selectChoice()
 yourlabs.Widget.prototype.bindSelectChoice = function() {
-    var widget = this;
-
     this.input.bind('selectChoice', function(e, choice) {
         if (!choice.length)
             return // placeholder: create choice here
@@ -1471,7 +1471,7 @@ yourlabs.Widget.prototype.destroy = function(widget) {
 // Calling yourlabsWidget('destroy') will destroy the widget. Useful if the
 // element was blindly cloned with .clone(true) for example.
 $.fn.yourlabsWidget = function(overrides) {
-    var overrides = overrides ? overrides : {};
+    overrides = overrides ? overrides : {};
 
     var widget = this.yourlabsRegistry('widget');
 
@@ -1485,14 +1485,14 @@ $.fn.yourlabsWidget = function(overrides) {
 
     if (widget === undefined) {
         // Instanciate the widget
-        var widget = new yourlabs.Widget(this);
+        widget = new yourlabs.Widget(this);
 
         // Extend the instance with data-widget-* overrides
         for (var key in this.data()) {
             if (!key) continue;
             if (key.substr(0, 6) !== 'widget' || key === 'widget') continue;
             var newKey = key.replace('widget', '');
-            var newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+            newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
             widget[newKey] = this.data(key);
         }
 
@@ -1590,8 +1590,10 @@ $(document).ready(function() {
             $('select#id-dependencies').append(
                 '<option value="9999" selected="selected">blabla</option>')
         */
+        var widget;
+
         if ($(e.target).is('option')) { // added an option ?
-            var widget = $(e.target).parents('.autocomplete-light-widget');
+            widget = $(e.target).parents('.autocomplete-light-widget');
 
             if (!widget.length) {
                 return;
@@ -1611,7 +1613,7 @@ $(document).ready(function() {
             }
         } else { // added a widget ?
             var notReady = '.autocomplete-light-widget:not([data-widget-ready])'
-            var widget = $(e.target).find(notReady);
+            widget = $(e.target).find(notReady);
 
             if (!widget.length) {
                 return;
@@ -1640,7 +1642,7 @@ $(document).ready(function() {
         ].join();
         $(observe).attr('data-yourlabs-skip', 1);
 
-        function ieDOMNodeInserted() {
+        var ieDOMNodeInserted = function() {
             // http://msdn.microsoft.com/en-us/library/ms536957
             $(observe).each(function() {
                 $(document).trigger(jQuery.Event('DOMNodeInserted', {target: $(this)}));
