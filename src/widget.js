@@ -367,6 +367,27 @@ $(document).ready(function() {
     //      });
     $(document).trigger('yourlabsWidgetReady');
 
+    $('.autocomplete-light-widget').on('initialize', function() {
+        /*
+        Set .change-related link when the admin loads, because it's apparently
+        unable to do it server side on initial rendering, not sure why, would
+        love to know !
+
+        For django 1.8 admin support.
+        */
+        var widget = $(this).yourlabsWidget();
+        var value = widget.select.val();
+
+        if (value !== undefined) {
+            var next = widget.widget.next();
+            var template = next.attr('data-href-template');
+
+            if (template && next.is('.change-related')) {
+                next.attr('href', template.replace('__fk__', value));
+            }
+        }
+    });
+
     $('.autocomplete-light-widget:not([id*="__prefix__"])').each(function() {
         $(this).trigger('initialize');
     });
