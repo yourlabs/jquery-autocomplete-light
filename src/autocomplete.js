@@ -320,6 +320,12 @@ yourlabs.Autocomplete.prototype.initialize = function() {
         if (this.box.is(':visible')) this.fixPosition();
     }, this));
 
+    // Currently, our positioning doesn't work well in Firefox. Since it's not
+    // the first option on mobile phones and small devices, we'll hide the bug
+    // until this is fixed.
+    if (/Firefox/i.test(navigator.userAgent))
+        $(window).on('scroll', $.proxy(this.hide, this));
+
     if (ie === -1 || ie > 9) {
         this.input.on('input.autocomplete', $.proxy(this.refresh, this));
     }
