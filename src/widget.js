@@ -373,11 +373,10 @@ $(document).ready(function() {
 
         For django 1.8 admin support.
         */
-        var widget = $(this).yourlabsWidget();
-        var value = widget.select.val();
+        var value = $(this).find('select').val();
 
         if (value !== undefined) {
-            var next = widget.widget.next();
+            var next = $(this).next();
             var template = next.attr('data-href-template');
 
             if (template && next.is('.change-related')) {
