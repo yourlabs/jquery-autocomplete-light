@@ -581,7 +581,7 @@ yourlabs.Autocomplete.prototype.fixPosition = function() {
     var el = this.input.get(0)
 
     var zIndex = this.input.parents().filter(function() {
-        return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== 0;
+        return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== '0';
     }).first().css('z-index');
 
     this.box.appendTo(this.container).css({
