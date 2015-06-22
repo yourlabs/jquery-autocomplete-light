@@ -109,15 +109,17 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
     var index = $(':input:visible').index(this.input);
     this.resetDisplay();
 
+    if (this.clearInputOnSelectChoice === '1') {
+        this.input.val('');
+        this.autocomplete.value = '';
+    }
+
     if (this.input.is(':visible')) {
         this.input.focus();
     } else {
         var next = $(':input:visible:eq('+ index +')');
         next.focus();
     }
-
-    if (this.clearInputOnSelectChoice === '1')
-        this.input.val('');
 }
 
 // Unselect a value if the maximum number of selected values has been
