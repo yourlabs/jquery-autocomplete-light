@@ -295,7 +295,8 @@ yourlabs.Autocomplete = function (input) {
     <body>.
     */
     this.container = this.input.parents().filter(function() {
-        return ['absolute', 'fixed'].indexOf($(this).css('position')) > -1;
+        var position = $(this).css('position');
+        return position === 'absolute' || position === 'fixed';
     }).first();
     if (!this.container.length) this.container = $('body');
 };
