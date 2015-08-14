@@ -58,7 +58,7 @@ yourlabs.Widget = function(widget) {
     // The number of choices that the user may select with this widget. Set 0
     // for no limit. In the case of a foreign key you want to set it to 1.
     this.maximumValues = 0;
-    
+
     // Clear input when choice made? 1 for yes, 0 for no
     this.clearInputOnSelectChoice = '1';
 }
@@ -105,7 +105,7 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
     this.freeDeck();
     this.addToDeck(choice, value);
     this.addToSelect(choice, value);
-    
+
     var index = $(':input:visible').index(this.input);
     this.resetDisplay();
 
@@ -161,7 +161,7 @@ yourlabs.Widget.prototype.deckChoiceHtml = function(choice, value) {
 
 yourlabs.Widget.prototype.optionChoice = function(option) {
     var optionChoice = this.choiceTemplate.clone();
-    
+
     var target = optionChoice.find('.append-option-html');
 
     if (target.length) {
@@ -184,7 +184,7 @@ yourlabs.Widget.prototype.addRemove = function(choices) {
     } else {
         // Add the remove icon to each choice
         choices.prepend(removeTemplate);
-    } 
+    }
 }
 
 // Add a selected choice of a given value to the deck.
@@ -242,8 +242,8 @@ yourlabs.Widget.prototype.updateAutocompleteExclude = function() {
     var widget = this;
     var choices = this.deck.find(this.autocomplete.choiceSelector);
 
-    this.autocomplete.data.exclude = $.map(choices, function(choice) { 
-        return widget.getValue($(choice)); 
+    this.autocomplete.data.exclude = $.map(choices, function(choice) {
+        return widget.getValue($(choice));
     });
 }
 
@@ -279,7 +279,7 @@ yourlabs.Widget.prototype.destroy = function(widget) {
 //
 // On first call, yourlabsWidget() will instanciate a widget applying all
 // passed overrides.
-// 
+//
 // On later calls, yourlabsWidget() will return the previously created widget
 // instance, which is stored in widget.data('widget').
 //
@@ -370,7 +370,7 @@ $(document).ready(function() {
         modal or popup).
 
         For this, we listen to DOMNodeInserted and intercept insert of <option> nodes.
-        
+
         The reason for that is that change is not triggered when options are
         added like this:
 
@@ -420,7 +420,7 @@ $(document).ready(function() {
             widget.trigger('initialize');
         }
     });
-    
+
     var ie = yourlabs.getInternetExplorerVersion();
     if (ie !== -1 && ie < 9) {
         observe = [
