@@ -255,7 +255,7 @@ yourlabs.Widget.prototype.initialize = function() {
     this.deck.find(this.autocomplete.choiceSelector).each(function() {
         var value = widget.getValue($(this));
         var option = widget.select.find('option[value="'+value+'"]');
-        if (!option.attr('selected')) option.attr('selected', true);
+        if (!option.prop('selected')) option.prop('selected', true);
     });
 
     var choices = this.deck.find(
