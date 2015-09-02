@@ -245,6 +245,12 @@ yourlabs.Autocomplete = function (input) {
     this.hilightClass = 'hilight';
 
     /*
+    When the user starts to type, the first choice is hilighted by default.
+    If you don't want this behaviour, change this variable.
+    */
+    this.autoHilightFirst = true;
+
+    /*
     The value of the input is passed to the server via a GET variable. This
     is the name of the variable.
      */
@@ -489,7 +495,7 @@ yourlabs.Autocomplete.prototype.show = function(html) {
 
     var current = this.box.find('.' + this.hilightClass);
     var first = this.box.find(this.choiceSelector + ':first');
-    if (first && !current.length) {
+    if (first && !current.length && this.autoHilightFirst) {
         first.addClass(this.hilightClass);
     }
 
