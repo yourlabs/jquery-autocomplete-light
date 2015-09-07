@@ -18,7 +18,7 @@ For now, the script is composed of these parts:
   autocompletes (ie. admin inlines)
 */
 
-jQuery.fn.getSelectionStart = function(){
+$.fn.getSelectionStart = function(){
     var r;
     // Written by jQuery4U
     // http://www.jquery4u.com/snippets/6-jquery-cursor-functions/#.UDPQ9xXtFw8
@@ -43,7 +43,7 @@ jQuery.fn.getSelectionStart = function(){
     return pos;
 }
 
-jQuery.fn.getCursorPosition = function(){
+$.fn.getCursorPosition = function(){
     // Written by jQuery4U
     if (this.lengh === 0) return -1;
     return $(this).getSelectionStart();
@@ -57,7 +57,7 @@ jQuery.fn.getCursorPosition = function(){
 //     foo, bar|, baz
 //
 // getCursorWord would return 'bar'.
-jQuery.fn.getCursorWord = function() {
+$.fn.getCursorWord = function() {
     var value = $(this).val();
     var positions = $(this).getCursorWordPositions();
     return value.substring(positions[0], positions[1]);
@@ -71,7 +71,7 @@ jQuery.fn.getCursorWord = function() {
 //     foo, bar|, baz
 //
 // getCursorWord would return [6, 8].
-jQuery.fn.getCursorWordPositions = function() {
+$.fn.getCursorWordPositions = function() {
     var position = $(this).getCursorPosition();
     var value = $(this).val();
 
