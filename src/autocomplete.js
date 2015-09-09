@@ -579,17 +579,33 @@ the system from Django admin's JS widgets like the date calendar, which means:
 - 
 */
 yourlabs.Autocomplete.prototype.fixPosition = function() {
-    var el = this.input.get(0)
+    var el = this.input.get(0);
 
     var zIndex = this.input.parents().filter(function() {
         return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== '0';
     }).first().css('z-index');
 
+    var absolute_parent = this.input.parents().filter(function(){
+      return $(this).css('position') === 'absolute';
+    }).get(0);
+
+    var top = (findPosY(el) + this.input.outerHeight()) + 'px';
+    var left = findPosX(el) + 'px';
+
+    if(absolute_parent !== undefined){
+        var parentTop = findPosY(absolute_parent);
+        var parentLeft = findPosX(absolute_parent);
+        var inputBottom = findPosY(el) + this.input.outerHeight();
+        var inputLeft = findPosX(el);
+        top = (inputBottom - parentTop) + 'px';
+        left = (inputLeft - parentLeft) + 'px';
+    }
+
     this.box.appendTo(this.container).css({
         position: 'absolute',
         minWidth: parseInt(this.input.outerWidth()),
-        top: (findPosY(el) + this.input.outerHeight()) + 'px',
-        left: findPosX(el) + 'px',
+        top: top,
+        left: left,
         zIndex: zIndex
     });
 };
