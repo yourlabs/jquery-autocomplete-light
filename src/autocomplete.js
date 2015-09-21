@@ -649,8 +649,8 @@ yourlabs.Autocomplete.prototype.fetch = function() {
         this.lastData[key] = this.data[key];
     }
 
-    // Abort any current request.
-    if (this.xhr) this.xhr.abort();
+    // Abort any unsent requests.
+    if (this.xhr && this.xhr.readyState === 0) this.xhr.abort();
 
     // Abort any request that we planned to make.
     if (this.timeoutId) clearTimeout(this.timeoutId);
@@ -672,9 +672,17 @@ yourlabs.Autocomplete.prototype.makeXhr = function() {
 
 // Callback for the ajax response.
 yourlabs.Autocomplete.prototype.fetchComplete = function(jqXHR, textStatus) {
+    if (this.xhr === jqXHR) {
+        // Current request finished.
+        this.xhr = false;
+    } else {
+        // Ignore response from earlier request.
+        return;
+    }
+
+    // Current request done, nothing else pending.
     this.input.removeClass('xhr-pending');
 
-    if (this.xhr === jqXHR) this.xhr = false;
     if (textStatus === 'abort') return;
     this.show(jqXHR.responseText);
 };
