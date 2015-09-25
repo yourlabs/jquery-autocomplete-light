@@ -205,6 +205,12 @@ yourlabs.Autocomplete = function (input) {
     this.hideAfter = 200;
 
     /*
+    Normally the autocomplete box aligns with the left edge of the input. To
+    align with the right edge of the input instead, change this variable.
+     */
+    this.alignRight = false;
+
+    /*
     The server should have a URL that takes the input value, and responds
     with the list of choices as HTML. In most cases, an absolute URL is
     better.
@@ -483,6 +489,7 @@ yourlabs.Autocomplete.prototype.show = function(html) {
     // body as argument.
     if (html !== undefined) {
         this.box.html(html);
+        this.fixPosition();
     }
 
     // Don't display empty boxes.
@@ -502,6 +509,7 @@ yourlabs.Autocomplete.prototype.show = function(html) {
     // Show the inner and outer container only if necessary.
     if (!this.box.is(':visible')) {
         this.box.css('display', 'block');
+        this.fixPosition();
     }
 };
 
@@ -605,6 +613,10 @@ yourlabs.Autocomplete.prototype.fixPosition = function() {
         var inputLeft = findPosX(el);
         top = (inputBottom - parentTop) + 'px';
         left = (inputLeft - parentLeft) + 'px';
+    }
+
+    if (this.alignRight) {
+        left = (findPosX(el) - (this.box.outerWidth() - this.input.outerWidth())) + 'px';
     }
 
     this.box.appendTo(this.container).css({
