@@ -10,7 +10,7 @@ $(document).ready(function() {
         */
         var value = $(this).find('select').val();
 
-        if (value !== undefined) {
+        if (value !== undefined && value !== null) {
             var next = $(this).next();
             var template = next.attr('data-href-template');
 
