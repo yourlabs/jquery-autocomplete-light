@@ -181,7 +181,7 @@ yourlabs.Autocomplete = function (input) {
 
     // The value of the input. It is kept as an attribute for optimisation
     // purposes.
-    this.value = '';
+    this.value = null;
 
     /*
     It is possible to wait until a certain number of characters have been
@@ -381,6 +381,9 @@ yourlabs.Autocomplete.prototype.inputBlur = function(e) {
 };
 
 yourlabs.Autocomplete.prototype.inputClick = function(e) {
+    if (this.value === null)
+        this.value = this.getQuery();
+
     if (this.value.length >= this.minimumCharacters)
         this.show();
 };
