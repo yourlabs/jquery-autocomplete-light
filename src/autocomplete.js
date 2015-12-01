@@ -245,10 +245,10 @@ yourlabs.Autocomplete = function (input) {
     this.hilightClass = 'hilight';
 
     /*
-    When the user starts to type, the first choice is hilighted by default.
-    If you don't want this behaviour, change this variable.
+    You can set this variable to true if you want the first choice
+    to be hilighted by default.
     */
-    this.autoHilightFirst = true;
+    this.autoHilightFirst = false;
 
     /*
     The value of the input is passed to the server via a GET variable. This
