@@ -616,7 +616,7 @@ yourlabs.Autocomplete.prototype.fixPosition = function() {
     }
 
     if (this.alignRight) {
-        left = (findPosX(el) - (this.box.outerWidth() - this.input.outerWidth())) + 'px';
+        left = (findPosX(el) + el.scrollLeft - (this.box.outerWidth() - this.input.outerWidth())) + 'px';
     }
 
     this.box.appendTo(this.container).css({
