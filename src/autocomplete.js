@@ -256,6 +256,13 @@ yourlabs.Autocomplete = function (input) {
     */
     this.autoHilightFirst = false;
 
+
+    /*
+    You can set this variable to false in order to allow opening of results
+    in new tabs or windows
+    */
+    this.bindMouseDown = true;
+
     /*
     The value of the input is passed to the server via a GET variable. This
     is the name of the variable.
@@ -362,8 +369,11 @@ yourlabs.Autocomplete.prototype.initialize = function() {
      */
     this.box
         .on('mouseenter', this.choiceSelector, $.proxy(this.boxMouseenter, this))
-        .on('mouseleave', this.choiceSelector, $.proxy(this.boxMouseleave, this))
+        .on('mouseleave', this.choiceSelector, $.proxy(this.boxMouseleave, this));
+    if(this.bindMouseDown){
+        this.box
         .on('mousedown', this.choiceSelector, $.proxy(this.boxClick, this));
+    }
 
     /*
     Initially - empty data queried
