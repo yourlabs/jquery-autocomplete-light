@@ -124,4 +124,4 @@ Check [CONTRIBUTING.md](https://github.com/yourlabs/jquery-autocomplete-light/bl
 
 ## License
 
-BSD
+MIT
