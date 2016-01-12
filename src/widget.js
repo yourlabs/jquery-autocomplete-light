@@ -120,6 +120,8 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         var next = $(':input:visible:eq('+ index +')');
         next.focus();
     }
+
+    this.input.prop('disabled', true);
 }
 
 // Unselect a value if the maximum number of selected values has been
@@ -235,6 +237,8 @@ yourlabs.Widget.prototype.deselectChoice = function(choice) {
     this.updateAutocompleteExclude();
     this.resetDisplay();
 
+    this.input.prop('disabled', false);
+
     this.widget.trigger('widgetDeselectChoice', [choice, this]);
 };
 
@@ -263,6 +267,10 @@ yourlabs.Widget.prototype.initialize = function() {
 
     this.addRemove(choices);
     this.resetDisplay();
+
+    if (widget.select.val()) {
+        this.input.prop('disabled', true);
+    }
 
     this.bindSelectChoice();
 }
