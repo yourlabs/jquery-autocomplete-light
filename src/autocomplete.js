@@ -534,7 +534,7 @@ yourlabs.Autocomplete.prototype.hide = function() {
 // This function is in charge of hilighting the right result from keyboard
 // navigation.
 yourlabs.Autocomplete.prototype.move = function(e) {
-	if (this.value === null)
+    if (this.value === null)
         this.value = this.getQuery();
 
     // If the autocomplete should not be displayed then return.
