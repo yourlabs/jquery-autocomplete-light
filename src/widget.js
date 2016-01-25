@@ -121,7 +121,9 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    this.input.prop('disabled', true);
+    if (this.input[0].className.indexOf('multiplechoicewidget') < 0) {
+        this.input.prop('disabled', true);
+    }
 }
 
 // Unselect a value if the maximum number of selected values has been
