@@ -121,7 +121,7 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    if (this.input[0].className.indexOf('multiplechoicewidget') < 0) {
+    if (! this.select.is('[multiple]')) {
         this.input.prop('disabled', true);
     }
 }
@@ -270,7 +270,7 @@ yourlabs.Widget.prototype.initialize = function() {
     this.addRemove(choices);
     this.resetDisplay();
 
-    if (widget.select.val()) {
+    if (widget.select.val() && ! this.select.is('[multiple]')) {
         this.input.prop('disabled', true);
     }
 
