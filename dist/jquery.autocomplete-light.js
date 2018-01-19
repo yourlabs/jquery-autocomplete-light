@@ -189,7 +189,7 @@ yourlabs.Autocomplete = function (input) {
 
     // The value of the input. It is kept as an attribute for optimisation
     // purposes.
-    this.value = '';
+    this.value = null;
 
     /*
     It is possible to wait until a certain number of characters have been
@@ -211,6 +211,12 @@ yourlabs.Autocomplete = function (input) {
     hiding the autocomplete.
      */
     this.hideAfter = 200;
+
+    /*
+    Normally the autocomplete box aligns with the left edge of the input. To
+    align with the right edge of the input instead, change this variable.
+     */
+    this.alignRight = false;
 
     /*
     The server should have a URL that takes the input value, and responds
@@ -251,6 +257,19 @@ yourlabs.Autocomplete = function (input) {
     'dehilighted'.
      */
     this.hilightClass = 'hilight';
+
+    /*
+    You can set this variable to true if you want the first choice
+    to be hilighted by default.
+    */
+    this.autoHilightFirst = false;
+
+
+    /*
+    You can set this variable to false in order to allow opening of results
+    in new tabs or windows
+    */
+    this.bindMouseDown = true;
 
     /*
     The value of the input is passed to the server via a GET variable. This
@@ -303,7 +322,8 @@ yourlabs.Autocomplete = function (input) {
     <body>.
     */
     this.container = this.input.parents().filter(function() {
-        return ['absolute', 'fixed'].indexOf($(this).css('position')) > -1;
+        var position = $(this).css('position');
+        return position === 'absolute' || position === 'fixed';
     }).first();
     if (!this.container.length) this.container = $('body');
 };
@@ -328,6 +348,12 @@ yourlabs.Autocomplete.prototype.initialize = function() {
         if (this.box.is(':visible')) this.fixPosition();
     }, this));
 
+    // Currently, our positioning doesn't work well in Firefox. Since it's not
+    // the first option on mobile phones and small devices, we'll hide the bug
+    // until this is fixed.
+    if (/Firefox/i.test(navigator.userAgent))
+        $(window).on('scroll', $.proxy(this.hide, this));
+
     if (ie === -1 || ie > 9) {
         this.input.on('input.autocomplete', $.proxy(this.refresh, this));
     }
@@ -351,8 +377,11 @@ yourlabs.Autocomplete.prototype.initialize = function() {
      */
     this.box
         .on('mouseenter', this.choiceSelector, $.proxy(this.boxMouseenter, this))
-        .on('mouseleave', this.choiceSelector, $.proxy(this.boxMouseleave, this))
+        .on('mouseleave', this.choiceSelector, $.proxy(this.boxMouseleave, this));
+    if(this.bindMouseDown){
+        this.box
         .on('mousedown', this.choiceSelector, $.proxy(this.boxClick, this));
+    }
 
     /*
     Initially - empty data queried
@@ -376,6 +405,9 @@ yourlabs.Autocomplete.prototype.inputBlur = function(e) {
 };
 
 yourlabs.Autocomplete.prototype.inputClick = function(e) {
+    if (this.value === null)
+        this.value = this.getQuery();
+
     if (this.value.length >= this.minimumCharacters)
         this.show();
 };
@@ -478,6 +510,7 @@ yourlabs.Autocomplete.prototype.show = function(html) {
     // body as argument.
     if (html !== undefined) {
         this.box.html(html);
+        this.fixPosition();
     }
 
     // Don't display empty boxes.
@@ -490,13 +523,14 @@ yourlabs.Autocomplete.prototype.show = function(html) {
 
     var current = this.box.find('.' + this.hilightClass);
     var first = this.box.find(this.choiceSelector + ':first');
-    if (first && !current.length) {
+    if (first && !current.length && this.autoHilightFirst) {
         first.addClass(this.hilightClass);
     }
 
     // Show the inner and outer container only if necessary.
     if (!this.box.is(':visible')) {
         this.box.css('display', 'block');
+        this.fixPosition();
     }
 };
 
@@ -508,6 +542,9 @@ yourlabs.Autocomplete.prototype.hide = function() {
 // This function is in charge of hilighting the right result from keyboard
 // navigation.
 yourlabs.Autocomplete.prototype.move = function(e) {
+    if (this.value === null)
+        this.value = this.getQuery();
+
     // If the autocomplete should not be displayed then return.
     if (this.value.length < this.minimumCharacters) return true;
 
@@ -580,17 +617,37 @@ the system from Django admin's JS widgets like the date calendar, which means:
 - 
 */
 yourlabs.Autocomplete.prototype.fixPosition = function() {
-    var el = this.input.get(0)
+    var el = this.input.get(0);
 
     var zIndex = this.input.parents().filter(function() {
-        return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== 0;
+        return $(this).css('z-index') !== 'auto' && $(this).css('z-index') !== '0';
     }).first().css('z-index');
+
+    var absolute_parent = this.input.parents().filter(function(){
+      return $(this).css('position') === 'absolute';
+    }).get(0);
+
+    var top = (findPosY(el) + this.input.outerHeight()) + 'px';
+    var left = findPosX(el) + 'px';
+
+    if(absolute_parent !== undefined){
+        var parentTop = findPosY(absolute_parent);
+        var parentLeft = findPosX(absolute_parent);
+        var inputBottom = findPosY(el) + this.input.outerHeight();
+        var inputLeft = findPosX(el);
+        top = (inputBottom - parentTop) + 'px';
+        left = (inputLeft - parentLeft) + 'px';
+    }
+
+    if (this.alignRight) {
+        left = (findPosX(el) + el.scrollLeft - (this.box.outerWidth() - this.input.outerWidth())) + 'px';
+    }
 
     this.box.appendTo(this.container).css({
         position: 'absolute',
         minWidth: parseInt(this.input.outerWidth()),
-        top: (findPosY(el) + this.input.outerHeight()) + 'px',
-        left: findPosX(el) + 'px',
+        top: top,
+        left: left,
         zIndex: zIndex
     });
 };
@@ -634,8 +691,8 @@ yourlabs.Autocomplete.prototype.fetch = function() {
         this.lastData[key] = this.data[key];
     }
 
-    // Abort any current request.
-    if (this.xhr) this.xhr.abort();
+    // Abort any unsent requests.
+    if (this.xhr && this.xhr.readyState === 0) this.xhr.abort();
 
     // Abort any request that we planned to make.
     if (this.timeoutId) clearTimeout(this.timeoutId);
@@ -657,9 +714,17 @@ yourlabs.Autocomplete.prototype.makeXhr = function() {
 
 // Callback for the ajax response.
 yourlabs.Autocomplete.prototype.fetchComplete = function(jqXHR, textStatus) {
+    if (this.xhr === jqXHR) {
+        // Current request finished.
+        this.xhr = false;
+    } else {
+        // Ignore response from earlier request.
+        return;
+    }
+
+    // Current request done, nothing else pending.
     this.input.removeClass('xhr-pending');
 
-    if (this.xhr === jqXHR) this.xhr = false;
     if (textStatus === 'abort') return;
     this.show(jqXHR.responseText);
 };
@@ -922,7 +987,7 @@ For now, the script is composed of these parts:
   autocompletes (ie. admin inlines)
 */
 
-jQuery.fn.getSelectionStart = function(){
+$.fn.getSelectionStart = function(){
     var r;
     // Written by jQuery4U
     // http://www.jquery4u.com/snippets/6-jquery-cursor-functions/#.UDPQ9xXtFw8
@@ -947,7 +1012,7 @@ jQuery.fn.getSelectionStart = function(){
     return pos;
 }
 
-jQuery.fn.getCursorPosition = function(){
+$.fn.getCursorPosition = function(){
     // Written by jQuery4U
     if (this.lengh === 0) return -1;
     return $(this).getSelectionStart();
@@ -961,7 +1026,7 @@ jQuery.fn.getCursorPosition = function(){
 //     foo, bar|, baz
 //
 // getCursorWord would return 'bar'.
-jQuery.fn.getCursorWord = function() {
+$.fn.getCursorWord = function() {
     var value = $(this).val();
     var positions = $(this).getCursorWordPositions();
     return value.substring(positions[0], positions[1]);
@@ -975,7 +1040,7 @@ jQuery.fn.getCursorWord = function() {
 //     foo, bar|, baz
 //
 // getCursorWord would return [6, 8].
-jQuery.fn.getCursorWordPositions = function() {
+$.fn.getCursorWordPositions = function() {
     var position = $(this).getCursorPosition();
     var value = $(this).val();
 
@@ -1238,7 +1303,7 @@ yourlabs.Widget = function(widget) {
     // The number of choices that the user may select with this widget. Set 0
     // for no limit. In the case of a foreign key you want to set it to 1.
     this.maximumValues = 0;
-    
+
     // Clear input when choice made? 1 for yes, 0 for no
     this.clearInputOnSelectChoice = '1';
 }
@@ -1285,9 +1350,14 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
     this.freeDeck();
     this.addToDeck(choice, value);
     this.addToSelect(choice, value);
-    
+
     var index = $(':input:visible').index(this.input);
     this.resetDisplay();
+
+    if (this.clearInputOnSelectChoice === '1') {
+        this.input.val('');
+        this.autocomplete.value = '';
+    }
 
     if (this.input.is(':visible')) {
         this.input.focus();
@@ -1296,8 +1366,9 @@ yourlabs.Widget.prototype.selectChoice = function(choice) {
         next.focus();
     }
 
-    if (this.clearInputOnSelectChoice === '1')
-        this.input.val('');
+    if (! this.select.is('[multiple]')) {
+        this.input.prop('disabled', true);
+    }
 }
 
 // Unselect a value if the maximum number of selected values has been
@@ -1339,7 +1410,7 @@ yourlabs.Widget.prototype.deckChoiceHtml = function(choice, value) {
 
 yourlabs.Widget.prototype.optionChoice = function(option) {
     var optionChoice = this.choiceTemplate.clone();
-    
+
     var target = optionChoice.find('.append-option-html');
 
     if (target.length) {
@@ -1362,7 +1433,7 @@ yourlabs.Widget.prototype.addRemove = function(choices) {
     } else {
         // Add the remove icon to each choice
         choices.prepend(removeTemplate);
-    } 
+    }
 }
 
 // Add a selected choice of a given value to the deck.
@@ -1413,6 +1484,8 @@ yourlabs.Widget.prototype.deselectChoice = function(choice) {
     this.updateAutocompleteExclude();
     this.resetDisplay();
 
+    this.input.prop('disabled', false);
+
     this.widget.trigger('widgetDeselectChoice', [choice, this]);
 };
 
@@ -1420,8 +1493,8 @@ yourlabs.Widget.prototype.updateAutocompleteExclude = function() {
     var widget = this;
     var choices = this.deck.find(this.autocomplete.choiceSelector);
 
-    this.autocomplete.data.exclude = $.map(choices, function(choice) { 
-        return widget.getValue($(choice)); 
+    this.autocomplete.data.exclude = $.map(choices, function(choice) {
+        return widget.getValue($(choice));
     });
 }
 
@@ -1433,7 +1506,7 @@ yourlabs.Widget.prototype.initialize = function() {
     this.deck.find(this.autocomplete.choiceSelector).each(function() {
         var value = widget.getValue($(this));
         var option = widget.select.find('option[value="'+value+'"]');
-        if (!option.attr('selected')) option.attr('selected', true);
+        if (!option.prop('selected')) option.prop('selected', true);
     });
 
     var choices = this.deck.find(
@@ -1442,14 +1515,11 @@ yourlabs.Widget.prototype.initialize = function() {
     this.addRemove(choices);
     this.resetDisplay();
 
-    this.bindSelectChoice();
-    this.clearBoth()
-}
+    if (widget.select.val() && ! this.select.is('[multiple]')) {
+        this.input.prop('disabled', true);
+    }
 
-// Add an empty div with clear:both after the widget's container.
-// This is meant to support django-responsive-admin templates.
-yourlabs.Widget.prototype.clearBoth = function() {
-    this.widget.parent().append('<div style="clear: both"></div>');
+    this.bindSelectChoice();
 }
 
 // Destroy the widget. Takes a widget element because a cloned widget element
@@ -1464,7 +1534,7 @@ yourlabs.Widget.prototype.destroy = function(widget) {
 //
 // On first call, yourlabsWidget() will instanciate a widget applying all
 // passed overrides.
-// 
+//
 // On later calls, yourlabsWidget() will return the previously created widget
 // instance, which is stored in widget.data('widget').
 //
@@ -1549,41 +1619,13 @@ $(document).ready(function() {
         $(this).trigger('initialize');
     });
 
-    $(document).bind('widgetDeselectChoice', function(e, choice, widget) {
-        /*
-        Unset the .change-related link when an item is selected.
-
-        For django 1.8 admin support.
-        */
-        var next = widget.widget.next();
-        var template = next.attr('data-href-template');
-
-        if (template && next.is('.change-related') && next.attr('href')) {
-            next.removeAttr('href');
-        }
-    });
-
-    $(document).bind('widgetSelectChoice', function(e, choice, widget) {
-        /*
-        Set the .change-related link when an item is selected.
-
-        For django 1.8 admin support.
-        */
-        var next = widget.widget.next();
-        var template = next.attr('data-href-template');
-
-        if (template && next.is('.change-related')) {
-            next.attr('href', template.replace('__fk__', widget.getValue(choice)));
-        }
-    });
-
     $(document).bind('DOMNodeInserted', function(e) {
         /*
         Support values added directly in the select via js (ie. choices created in
         modal or popup).
 
         For this, we listen to DOMNodeInserted and intercept insert of <option> nodes.
-        
+
         The reason for that is that change is not triggered when options are
         added like this:
 
@@ -1633,7 +1675,7 @@ $(document).ready(function() {
             widget.trigger('initialize');
         }
     });
-    
+
     var ie = yourlabs.getInternetExplorerVersion();
     if (ie !== -1 && ie < 9) {
         observe = [
