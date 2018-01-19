@@ -42,8 +42,6 @@ override Widget.getValue() to implement your own logic.
 // Our class will live in the yourlabs global namespace.
 if (window.yourlabs === undefined) window.yourlabs = {};
 
-$.ajaxSettings.traditional = true
-
 /*
 Instanciate a Widget.
 */

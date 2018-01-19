@@ -16,6 +16,7 @@ yourlabs.RemoteAutocompleteWidget = {
         if (typeof(value) === 'string' && isNaN(value) && value.match(/^https?:/)) {
             $.ajax(this.autocompleteOptions.url, {
                 async: false,
+                traditional: true,
                 type: 'post',
                 data: {
                     'value': value
